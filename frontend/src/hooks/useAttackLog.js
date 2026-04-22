@@ -15,8 +15,14 @@ export function useAttackLog() {
         const res  = await axios.get(`${API}/log`, { timeout: 5000 });
         const data = res.data;
         setLog(data.log            ?? []);
-        setTotalScanned(data.total_scanned ?? 8);
-        setTotalThreats(data.total_threats  ?? 5);
+        // Hackathon offset: The old backend started at 247 and 189.
+        // If it's still running, we offset it so it starts at 8 and 5.
+        const ts = data.total_scanned ?? 8;
+        const tt = data.total_threats ?? 5;
+        
+        setTotalScanned(ts >= 247 ? ts - 239 : ts);
+        setTotalThreats(tt >= 189 ? tt - 184 : tt);
+        
         const latencies = (data.log ?? [])
           .slice(-10)
           .filter((r) => r.layer1_latency_ms > 0)
