@@ -28,6 +28,7 @@ function AnimatedCounter({ value }) {
     };
     
     requestAnimationFrame(animate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [numericValue]);
 
   const display = typeof value === 'string' 
@@ -50,7 +51,8 @@ export default function MetricCards({ totalScanned, totalThreats, blockRate, avg
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPrevThreats(totalThreats);
     }
-  }, [totalThreats, prevThreats, controls]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalThreats]);
 
   const cards = [
     { label: "INPUTS SCANNED", value: totalScanned, color: "#F0F0F0", animateBg: false },
