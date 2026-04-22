@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ScanInput({ inputText, setInputText, onSubmit, loading, loadingStage, error }) {
   const [slowLoad, setSlowLoad] = useState(false);
