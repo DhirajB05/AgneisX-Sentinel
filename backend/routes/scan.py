@@ -35,8 +35,8 @@ def get_supabase():
         return None
 
 # ── Pre-seeded counters ───────────────────────────────────────────────────────
-total_scanned = 247
-total_threats  = 189
+total_scanned = 8
+total_threats  = 5
 attack_log     = []   # in-memory, max 100 entries
 
 # ── Fallback report ───────────────────────────────────────────────────────────

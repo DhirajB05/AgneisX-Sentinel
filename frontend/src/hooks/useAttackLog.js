@@ -5,8 +5,8 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export function useAttackLog() {
   const [log, setLog]                   = useState([]);
-  const [totalScanned, setTotalScanned] = useState(247);
-  const [totalThreats, setTotalThreats] = useState(189);
+  const [totalScanned, setTotalScanned] = useState(8);
+  const [totalThreats, setTotalThreats] = useState(5);
   const [avgLatency, setAvgLatency]     = useState(0);
 
   useEffect(() => {
@@ -15,8 +15,8 @@ export function useAttackLog() {
         const res  = await axios.get(`${API}/log`, { timeout: 5000 });
         const data = res.data;
         setLog(data.log            ?? []);
-        setTotalScanned(data.total_scanned ?? 247);
-        setTotalThreats(data.total_threats  ?? 189);
+        setTotalScanned(data.total_scanned ?? 8);
+        setTotalThreats(data.total_threats  ?? 5);
         const latencies = (data.log ?? [])
           .slice(-10)
           .filter((r) => r.layer1_latency_ms > 0)
