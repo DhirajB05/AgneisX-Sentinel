@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 export default function ScanInput({ inputText, setInputText, onSubmit, loading, loadingStage, error }) {
   const [slowLoad, setSlowLoad] = useState(false);
@@ -9,6 +9,7 @@ export default function ScanInput({ inputText, setInputText, onSubmit, loading, 
     if (loadingStage === 'l1') {
       timer = setTimeout(() => setSlowLoad(true), 5000);
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSlowLoad(false);
     }
     return () => clearTimeout(timer);

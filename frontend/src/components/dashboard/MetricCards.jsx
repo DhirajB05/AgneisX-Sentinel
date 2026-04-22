@@ -47,6 +47,7 @@ export default function MetricCards({ totalScanned, totalThreats, blockRate, avg
         background: ['#0d0000', '#0f0f0f'],
         transition: { duration: 0.5 }
       });
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPrevThreats(totalThreats);
     }
   }, [totalThreats, prevThreats, controls]);

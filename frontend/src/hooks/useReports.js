@@ -28,6 +28,7 @@ export function useReports() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchReports();
     const interval = setInterval(fetchReports, 30000);
     return () => clearInterval(interval);

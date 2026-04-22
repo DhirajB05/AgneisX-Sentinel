@@ -13,7 +13,7 @@ export default function NavbarDashboard() {
       try {
         const res = await axios.get(`${API}/health`, { timeout: 3000 });
         setIsOnline(res.data.status === 'ok');
-      } catch (e) {
+      } catch {
         setIsOnline(false);
       }
     };
