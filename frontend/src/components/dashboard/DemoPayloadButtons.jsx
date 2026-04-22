@@ -17,13 +17,23 @@ export default function DemoPayloadButtons({ demoMode, onSelectPayload }) {
               <button
                 key={payload.id}
                 onClick={() => onSelectPayload(payload.text)}
+                className="glass-card"
                 style={{
-                  background: '#111', border: '1px solid #222', borderRadius: '2px',
-                  fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#444', textTransform: 'uppercase', letterSpacing: '0.1em', padding: '6px 12px',
-                  cursor: 'pointer', transition: 'border-color 0.15s, color 0.15s, background 0.15s'
+                  fontFamily: 'var(--font-mono)', fontSize: '9px',
+                  color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em',
+                  padding: '8px 14px', cursor: 'pointer',
+                  transition: 'all 0.2s'
                 }}
-                onMouseOver={e => { e.currentTarget.style.borderColor = '#C8FF00'; e.currentTarget.style.color = '#C8FF00'; e.currentTarget.style.background = '#0f0f0f'; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.color = '#444'; e.currentTarget.style.background = '#111'; }}
+                onMouseOver={e => {
+                  e.currentTarget.style.borderColor = 'rgba(200,255,0,0.25)';
+                  e.currentTarget.style.color = '#C8FF00';
+                  e.currentTarget.style.boxShadow = '0 0 16px rgba(200,255,0,0.06)';
+                }}
+                onMouseOut={e => {
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+                  e.currentTarget.style.color = '#555';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
               >
                 {payload.label}
               </button>

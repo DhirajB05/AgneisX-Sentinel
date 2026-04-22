@@ -15,15 +15,20 @@ function timeAgo(dateString) {
 
 export default function PreviousReports({ reports, loading }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid #111', height: '100%', overflow: 'hidden' }}>
-      <div style={{ padding: '8px 12px', borderBottom: '1px solid #111', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#2a2a2a' }}>// PREVIOUS REPORTS</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#333333' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+      <div style={{
+        padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+      }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#444', letterSpacing: '0.1em' }}>
+          // REPORTS
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#222' }}>
           SUPABASE 
           <style>
             {`
               @keyframes pulseSupa {
-                0%, 100% { opacity: 0.4; }
+                0%, 100% { opacity: 0.3; }
                 50% { opacity: 1; }
               }
             `}
@@ -46,8 +51,8 @@ export default function PreviousReports({ reports, loading }) {
           <>
             {[1, 2, 3].map(i => (
               <div key={i} style={{
-                height: '44px', margin: '4px 12px', borderRadius: '2px',
-                background: 'linear-gradient(90deg, #111, #1a1a1a, #111)',
+                height: '48px', margin: '6px 12px', borderRadius: 'var(--radius-sm)',
+                background: 'linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
                 backgroundSize: '200% 100%',
                 animation: 'shimmer 1.5s ease-in-out infinite'
               }} />
@@ -55,7 +60,7 @@ export default function PreviousReports({ reports, loading }) {
           </>
         ) : reports.length === 0 ? (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#333333' }}>// NO REPORTS YET //</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#222' }}>// NO REPORTS YET //</div>
           </div>
         ) : (
           <AnimatePresence>
@@ -64,35 +69,40 @@ export default function PreviousReports({ reports, loading }) {
                 key={report.id || idx}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: idx * 0.05 }}
+                transition={{ delay: idx * 0.04 }}
                 style={{
-                  padding: '8px 12px', borderBottom: '1px solid #0d0d0d',
+                  padding: '12px 16px',
+                  borderBottom: '1px solid rgba(255,255,255,0.02)',
                   display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-                  cursor: 'default'
+                  cursor: 'default', transition: 'background 0.2s'
                 }}
-                onMouseOver={e => e.currentTarget.style.background = '#0f0f0f'}
+                onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.015)'}
                 onMouseOut={e => e.currentTarget.style.background = 'transparent'}
               >
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <div style={{
                     display: 'inline-block',
                     background: report.verdict === 'THREAT' ? '#FF2222' : '#C8FF00',
-                    color: '#000',
-                    fontFamily: 'var(--font-mono)', fontSize: '8px', padding: '2px 6px', borderRadius: '2px', alignSelf: 'flex-start'
+                    color: report.verdict === 'THREAT' ? '#FFF' : '#000',
+                    fontFamily: 'var(--font-mono)', fontSize: '8px', fontWeight: 700,
+                    padding: '2px 8px', borderRadius: '3px', alignSelf: 'flex-start'
                   }}>
                     {report.verdict}
                   </div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: '#2a2a2a' }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: '#222' }}>
                     {timeAgo(report.created_at)}
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', maxWidth: '60%' }}>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#333', textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', maxWidth: '55%' }}>
+                  <div style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#444',
+                    textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%'
+                  }}>
                     {report.input_preview}
                   </div>
                   {report.verdict === 'THREAT' && report.attack_type && (
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: '#444', marginTop: '2px' }}>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: '#333', marginTop: '2px' }}>
                       {report.attack_type}
                     </div>
                   )}

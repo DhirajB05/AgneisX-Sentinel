@@ -45,8 +45,8 @@ export default function MetricCards({ totalScanned, totalThreats, blockRate, avg
   useEffect(() => {
     if (totalThreats > prevThreats) {
       controls.start({
-        background: ['#0d0000', '#0f0f0f'],
-        transition: { duration: 0.5 }
+        background: ['rgba(255,34,34,0.06)', 'rgba(255,255,255,0.02)'],
+        transition: { duration: 0.8 }
       });
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPrevThreats(totalThreats);
@@ -55,18 +55,18 @@ export default function MetricCards({ totalScanned, totalThreats, blockRate, avg
   }, [totalThreats]);
 
   const cards = [
-    { label: "INPUTS SCANNED", value: totalScanned, color: "#F0F0F0", animateBg: false },
-    { label: "THREATS BLOCKED", value: totalThreats, color: "#FF2222", animateBg: true },
-    { label: "BLOCK RATE", value: blockRate, color: "#C8FF00", animateBg: false },
-    { label: "AVG L1 LATENCY", value: avgLatency > 0 ? `${avgLatency}ms` : "<50ms", color: "#888888", animateBg: false }
+    { label: "INPUTS SCANNED", value: totalScanned, color: "#F0F0F0", animateBg: false, icon: "◎" },
+    { label: "THREATS BLOCKED", value: totalThreats, color: "#FF2222", animateBg: true, icon: "⚠" },
+    { label: "BLOCK RATE", value: blockRate, color: "#C8FF00", animateBg: false, icon: "◆" },
+    { label: "AVG L1 LATENCY", value: avgLatency > 0 ? `${avgLatency}ms` : "<50ms", color: "#888888", animateBg: false, icon: "⏱" }
   ];
 
   return (
-    <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <div style={{ padding: '12px 16px', display: 'flex', gap: '12px' }}>
       <style>
         {`
           @keyframes liveDot {
-            0%, 100% { opacity: 0.4; }
+            0%, 100% { opacity: 0.3; }
             50% { opacity: 1; }
           }
         `}
@@ -76,18 +76,32 @@ export default function MetricCards({ totalScanned, totalThreats, blockRate, avg
         <motion.div 
           key={idx}
           animate={c.animateBg ? controls : undefined}
+          className="glass-card"
           style={{
-            background: '#0f0f0f', border: '1px solid #1a1a1a', padding: '16px', borderRadius: '2px'
+            flex: 1, padding: '16px 20px',
+            display: 'flex', flexDirection: 'column', gap: '8px'
           }}
         >
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#333', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '8px' }}>
-            {c.label}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{
+              fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#444',
+              letterSpacing: '0.12em'
+            }}>
+              {c.label}
+            </div>
+            <div style={{ fontSize: '12px', opacity: 0.3 }}>{c.icon}</div>
           </div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '32px', fontWeight: 700, color: c.color }}>
+          <div style={{
+            fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 700,
+            color: c.color, letterSpacing: '-0.02em'
+          }}>
             <AnimatedCounter value={c.value} />
           </div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#2a2a2a', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ animation: 'liveDot 2s ease-in-out infinite' }}>●</span> LIVE
+          <div style={{
+            fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#222',
+            display: 'flex', alignItems: 'center', gap: '4px'
+          }}>
+            <span style={{ color: '#C8FF00', animation: 'liveDot 2s ease-in-out infinite' }}>●</span> LIVE
           </div>
         </motion.div>
       ))}

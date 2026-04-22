@@ -25,33 +25,44 @@ export default function NavbarDashboard() {
 
   return (
     <nav style={{
-      height: '48px',
-      background: '#080808',
-      borderBottom: '1px solid #1a1a1a',
+      height: '52px',
+      background: 'rgba(255,255,255,0.01)',
+      borderBottom: '1px solid rgba(255,255,255,0.04)',
       padding: '0 20px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      gridColumn: '1 / -1'
+      flexShrink: 0
     }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <button 
           onClick={() => navigate('/')} 
           style={{
-            background: 'none', border: 'none', color: '#444', cursor: 'pointer',
-            fontSize: '18px', padding: 0, display: 'flex', alignItems: 'center'
+            background: 'none', border: 'none', color: '#333', cursor: 'pointer',
+            fontSize: '16px', padding: 0, display: 'flex', alignItems: 'center',
+            transition: 'color 0.2s'
           }}
           onMouseOver={e => e.currentTarget.style.color = '#C8FF00'}
-          onMouseOut={e => e.currentTarget.style.color = '#444'}
+          onMouseOut={e => e.currentTarget.style.color = '#333'}
         >
           ←
         </button>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: '#C8FF00', letterSpacing: '0.2em', marginLeft: '12px' }}>
-          ⚡ SENTINEL
+        <div style={{
+          fontFamily: 'var(--font-display)', fontSize: '14px', color: '#F0F0F0',
+          letterSpacing: '0.2em', fontWeight: 600
+        }}>
+          SENTINEL
+        </div>
+        <div style={{
+          fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#222',
+          background: 'rgba(200,255,0,0.05)', padding: '3px 8px', borderRadius: '4px',
+          border: '1px solid rgba(200,255,0,0.08)'
+        }}>
+          v1.0
         </div>
       </div>
 
-      <div style={{ width: '400px', overflow: 'hidden' }}>
+      <div style={{ width: '360px', overflow: 'hidden' }}>
         <style>
           {`
             @keyframes marqueeScroll {
@@ -61,14 +72,14 @@ export default function NavbarDashboard() {
           `}
         </style>
         <div style={{
-          fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#2a2a2a', whiteSpace: 'nowrap',
-          animation: 'marqueeScroll 30s linear infinite'
+          fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#1a1a1a', whiteSpace: 'nowrap',
+          animation: 'marqueeScroll 30s linear infinite', letterSpacing: '0.1em'
         }}>
           SENTINEL ACTIVE /// L1: ONLINE /// L2: STANDBY /// MONITORING ENABLED ///
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <style>
           {`
             @keyframes pulseDot {
@@ -80,10 +91,14 @@ export default function NavbarDashboard() {
         <div style={{
           width: '8px', height: '8px', borderRadius: '50%',
           background: isOnline ? '#C8FF00' : '#FF2222',
-          animation: isOnline ? 'pulseDot 1.5s ease-in-out infinite' : 'none'
+          animation: isOnline ? 'pulseDot 1.5s ease-in-out infinite' : 'none',
+          boxShadow: isOnline ? '0 0 8px rgba(200,255,0,0.3)' : 'none'
         }} />
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: isOnline ? '#444' : '#FF2222' }}>
-          {isOnline ? 'SYSTEM ONLINE' : 'SYSTEM OFFLINE'}
+        <div style={{
+          fontFamily: 'var(--font-mono)', fontSize: '10px',
+          color: isOnline ? '#555' : '#FF2222'
+        }}>
+          {isOnline ? 'ONLINE' : 'OFFLINE'}
         </div>
       </div>
     </nav>

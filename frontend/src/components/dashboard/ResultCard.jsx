@@ -4,69 +4,67 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function ResultCard({ result }) {
   if (!result) return null;
 
-  const isSafe = result.verdict === 'SAFE';
-  
+  const isThreat = result.verdict === 'THREAT';
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35 }}
-      style={{
-        border: isSafe ? '1px solid #C8FF00' : '1px solid #FF2222',
-        boxShadow: isSafe ? 'var(--glow-safe)' : 'var(--glow-threat)',
-        background: '#0f0f0f',
-        padding: '16px',
-        borderRadius: '2px',
-        marginBottom: '16px'
-      }}
-    >
-      {isSafe ? (
-        <>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#333', marginBottom: '8px' }}>INPUT CLASSIFIED</div>
-          <div style={{
-            display: 'inline-block', background: '#C8FF00', color: '#000',
-            fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 700,
-            padding: '4px 10px', borderRadius: '2px'
-          }}>
-            ● SAFE
-          </div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: '#C8FF00', marginTop: '8px' }}>
-            THREAT SCORE: {result.injection_score.toFixed(4)}
-          </div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#333', marginTop: '4px' }}>
-            L1: {result.layer1_latency_ms}ms | L2: NOT TRIGGERED
-          </div>
-        </>
-      ) : (
-        <>
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+        className="glass-card"
+        style={{
+          padding: '20px',
+          borderColor: isThreat ? 'rgba(255,34,34,0.2)' : 'rgba(200,255,0,0.15)',
+          boxShadow: isThreat
+            ? '0 0 40px rgba(255,34,34,0.06), inset 0 1px 0 rgba(255,34,34,0.05)'
+            : '0 0 40px rgba(200,255,0,0.06), inset 0 1px 0 rgba(200,255,0,0.05)',
+          position: 'relative', zIndex: 1
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
           <motion.div
             initial={{ scale: 0.8 }}
             animate={{ scale: [0.8, 1.05, 1] }}
             transition={{ type: 'spring', stiffness: 300, damping: 15 }}
             style={{
-              display: 'inline-block', background: '#FF2222', color: '#FFF',
-              fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 700,
-              padding: '4px 10px', borderRadius: '2px', marginBottom: '8px'
+              background: isThreat ? '#FF2222' : '#C8FF00',
+              color: isThreat ? '#FFF' : '#000',
+              fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 700,
+              padding: '6px 16px', borderRadius: 'var(--radius-sm)',
+              boxShadow: isThreat ? '0 0 20px rgba(255,34,34,0.3)' : '0 0 20px rgba(200,255,0,0.3)',
+              letterSpacing: '0.12em'
             }}
           >
-            ⚠ THREAT DETECTED
+            {isThreat ? '⚠ THREAT DETECTED' : '✓ INPUT SAFE'}
           </motion.div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: '#FF2222' }}>
-            THREAT SCORE: {result.injection_score.toFixed(4)}
+
+          <div style={{
+            fontFamily: 'var(--font-mono)', fontSize: '10px',
+            color: isThreat ? '#FF2222' : '#C8FF00',
+            background: isThreat ? 'rgba(255,34,34,0.08)' : 'rgba(200,255,0,0.08)',
+            padding: '4px 10px', borderRadius: '4px'
+          }}>
+            SCORE: {result.injection_score?.toFixed(4)}
           </div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#333', marginTop: '4px' }}>
-            L1: {result.layer1_latency_ms}ms | L2: TRIGGERED
-          </div>
-          <style>
-            {`
-              @keyframes blinkAlert { 0%,100%{color:#FF8800} 50%{color:transparent} }
-            `}
-          </style>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', animation: 'blinkAlert 1s step-start infinite', marginTop: '8px' }}>
-            ESCALATED TO SENTINEL AI ENGINE
-          </div>
-        </>
-      )}
-    </motion.div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+          {[
+            { label: 'VERDICT', value: result.verdict, color: isThreat ? '#FF2222' : '#C8FF00' },
+            { label: 'LAYER 2', value: result.layer2_triggered ? 'TRIGGERED' : 'NOT TRIGGERED', color: result.layer2_triggered ? '#FF8800' : '#444' },
+            { label: 'SEVERITY', value: result.severity || 'N/A', color: '#888' }
+          ].map((field, idx) => (
+            <div key={idx} style={{
+              background: 'rgba(255,255,255,0.015)', borderRadius: 'var(--radius-sm)',
+              padding: '10px 12px'
+            }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: '#333', letterSpacing: '0.15em', marginBottom: '4px' }}>{field.label}</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: field.color, fontWeight: 600 }}>{field.value}</div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
