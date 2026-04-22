@@ -8,7 +8,6 @@ import ForensicReport from '../components/dashboard/ForensicReport';
 import AttackFeed from '../components/dashboard/AttackFeed';
 import PreviousReports from '../components/dashboard/PreviousReports';
 import DemoPayloadButtons from '../components/dashboard/DemoPayloadButtons';
-import GlobeBackground from '../components/dashboard/GlobeBackground';
 import { useScanner } from '../hooks/useScanner';
 import { useAttackLog } from '../hooks/useAttackLog';
 import { useReports } from '../hooks/useReports';
@@ -29,170 +28,180 @@ export default function Dashboard() {
 
   React.useEffect(() => {
     const check = async () => {
-      try {
-        const r = await axios.get(`${API}/health`, { timeout: 3000 });
-        setIsOnline(r.data.status === 'ok');
-      } catch { setIsOnline(false); }
+      try { const r = await axios.get(`${API}/health`, { timeout: 3000 }); setIsOnline(r.data.status === 'ok'); }
+      catch { setIsOnline(false); }
     };
-    check();
-    const iv = setInterval(check, 25000);
-    return () => clearInterval(iv);
+    check(); const iv = setInterval(check, 25000); return () => clearInterval(iv);
   }, []);
 
-  const handleScan = async (text) => {
-    await scan(text || inputText);
-    refetch();
-  };
+  const handleScan = async (text) => { await scan(text || inputText); refetch(); };
   const handleSelectPayload = (text) => setInputText(text);
 
-  const sidebarItems = [
-    { icon: '◎', label: 'Dashboard' },
-    { icon: '⬡', label: 'Scan' },
-    { icon: '◇', label: 'Reports' },
-    { icon: '⚙', label: 'Settings' },
+  const sidebarNav = [
+    { section: 'SCANNING', items: [
+      { label: 'Overview', active: true },
+      { label: 'Scan Input' },
+      { label: 'Forensics' },
+      { label: 'Attack Feed' },
+    ]},
+    { section: 'SETTINGS', items: [
+      { label: 'Configuration' },
+      { label: 'API Keys' },
+      { label: 'Documentation' },
+    ]},
   ];
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-    <div style={{ display: 'flex', height: '100vh', background: '#0a0a0a', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', height: '100vh', background: 'var(--bg-dash)', overflow: 'hidden' }}>
 
-      {/* ═══ SIDEBAR ═══ */}
+      {/* LEFT SIDEBAR — matches reference: wider with text labels */}
       <div style={{
-        width: '56px', background: '#050505',
-        borderRight: '1px solid rgba(255,255,255,0.04)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        paddingTop: '16px', gap: '4px', flexShrink: 0
+        width: '200px', background: 'var(--bg-sidebar)',
+        borderRight: '1px solid var(--border)',
+        display: 'flex', flexDirection: 'column', flexShrink: 0, padding: '0'
       }}>
-        {/* Logo */}
-        <div style={{
-          width: '32px', height: '32px', borderRadius: '8px',
-          background: 'rgba(200,255,0,0.06)', border: '1px solid rgba(200,255,0,0.12)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '14px', marginBottom: '20px', cursor: 'pointer'
-        }} onClick={() => navigate('/')}>⚡</div>
-
-        {sidebarItems.map((item, i) => (
-          <div key={i} onClick={() => setSidebarActive(i)} style={{
-            width: '36px', height: '36px', borderRadius: '8px',
+        {/* User area */}
+        <div style={{ padding: '16px 16px 12px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            width: '32px', height: '32px', borderRadius: '50%',
+            background: 'var(--accent-dim)', border: '1px solid rgba(34,197,94,0.2)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '14px', cursor: 'pointer',
-            background: sidebarActive === i ? 'rgba(200,255,0,0.06)' : 'transparent',
-            color: sidebarActive === i ? '#C8FF00' : '#333',
-            transition: 'all 0.15s', position: 'relative'
-          }}>
-            {item.icon}
-            {sidebarActive === i && <div style={{
-              position: 'absolute', left: '-1px', top: '50%', transform: 'translateY(-50%)',
-              width: '2px', height: '18px', borderRadius: '0 2px 2px 0', background: '#C8FF00'
-            }} />}
+            fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--accent)', fontWeight: 700
+          }}>/S/</div>
+          <div>
+            <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--text-1)', fontWeight: 500 }}>Sentinel</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-3)' }}>v1.0 beta</div>
           </div>
-        ))}
+        </div>
 
-        <div style={{ marginTop: 'auto', marginBottom: '16px' }}>
+        {/* Search */}
+        <div style={{ padding: '10px 12px' }}>
+          <div style={{
+            background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)',
+            borderRadius: '6px', padding: '7px 10px', display: 'flex', alignItems: 'center', gap: '6px'
+          }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-3)' }}>Q</span>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--text-3)' }}>Search...</span>
+          </div>
+        </div>
+
+        {/* Nav sections */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '4px 0' }}>
+          {sidebarNav.map((sec, si) => (
+            <div key={si} style={{ marginBottom: '8px' }}>
+              <div style={{ padding: '8px 16px 4px', fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-3)', letterSpacing: '0.1em' }}>{sec.section}</div>
+              {sec.items.map((item, ii) => {
+                const isActive = si === 0 && ii === sidebarActive;
+                return (
+                  <div key={ii} onClick={() => { if (si === 0) setSidebarActive(ii); }}
+                    style={{
+                      padding: '8px 16px', margin: '1px 8px', borderRadius: '6px', cursor: 'pointer',
+                      background: isActive ? 'var(--accent-dim)' : 'transparent',
+                      display: 'flex', alignItems: 'center', gap: '8px', transition: 'background 0.15s'
+                    }}
+                    onMouseOver={e => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                    onMouseOut={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
+                  >
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: isActive ? 'var(--accent)' : 'var(--text-2)', fontWeight: isActive ? 500 : 400 }}>{item.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+
+        {/* Status */}
+        <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '6px' }}>
           <div style={{
             width: '7px', height: '7px', borderRadius: '50%',
-            background: isOnline ? '#C8FF00' : '#FF2222',
-            boxShadow: isOnline ? '0 0 6px rgba(200,255,0,0.4)' : 'none',
-            animation: isOnline ? 'pulse 2s ease-in-out infinite' : 'none'
+            background: isOnline ? 'var(--accent)' : 'var(--threat)',
+            boxShadow: isOnline ? '0 0 6px var(--accent-glow)' : 'none'
           }} />
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: isOnline ? 'var(--text-2)' : 'var(--threat)' }}>
+            {isOnline ? 'SYSTEM ONLINE' : 'OFFLINE'}
+          </span>
         </div>
       </div>
 
-      {/* ═══ MAIN ═══ */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      {/* MAIN AREA */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
 
-        {/* Top nav bar */}
+        {/* Top bar — breadcrumbs + controls */}
         <div style={{
-          height: '44px', borderBottom: '1px solid rgba(255,255,255,0.04)',
+          height: '44px', borderBottom: '1px solid var(--border)',
           padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           background: 'rgba(255,255,255,0.01)', flexShrink: 0
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '13px', color: '#fff', letterSpacing: '0.12em', fontWeight: 600 }}>SENTINEL</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: '#333', background: 'rgba(200,255,0,0.04)', padding: '2px 6px', borderRadius: '3px', border: '1px solid rgba(200,255,0,0.08)' }}>v1.0</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--text-3)', cursor: 'pointer' }}
+              onClick={() => navigate('/')}>Sentinel</span>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--text-3)' }}>/</span>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--text-1)', fontWeight: 500 }}>Overview</span>
           </div>
-          <div style={{ overflow: 'hidden', width: '280px' }}>
-            <div style={{
-              fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#1a1a1a',
-              whiteSpace: 'nowrap', animation: 'marquee 30s linear infinite'
-            }}>
-              SENTINEL ACTIVE /// L1: ONLINE /// L2: STANDBY /// MONITORING ENABLED /// SENTINEL ACTIVE /// L1: ONLINE ///
-            </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             {/* Demo toggle */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: demoMode ? '#C8FF00' : '#333' }}>DEMO</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: demoMode ? 'var(--accent)' : 'var(--text-3)' }}>DEMO</span>
               <div onClick={() => setDemoMode(!demoMode)} style={{
                 width: '32px', height: '16px', borderRadius: '8px', cursor: 'pointer',
-                background: demoMode ? 'rgba(200,255,0,0.15)' : 'rgba(255,255,255,0.04)',
-                border: demoMode ? '1px solid rgba(200,255,0,0.25)' : '1px solid rgba(255,255,255,0.06)',
-                position: 'relative', display: 'flex', alignItems: 'center', padding: '0 2px',
-                transition: 'all 0.2s'
+                background: demoMode ? 'var(--accent-dim)' : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${demoMode ? 'rgba(34,197,94,0.25)' : 'var(--border)'}`,
+                position: 'relative', display: 'flex', alignItems: 'center', padding: '0 2px', transition: 'all 0.2s'
               }}>
                 <motion.div animate={{ x: demoMode ? 14 : 0 }} transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   style={{
                     width: '12px', height: '12px', borderRadius: '6px',
-                    background: demoMode ? '#C8FF00' : '#444',
-                    boxShadow: demoMode ? '0 0 6px rgba(200,255,0,0.4)' : 'none'
+                    background: demoMode ? 'var(--accent)' : '#555',
+                    boxShadow: demoMode ? '0 0 6px var(--accent-glow)' : 'none'
                   }} />
               </div>
             </div>
-            {/* Status */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <div style={{
-                width: '6px', height: '6px', borderRadius: '50%',
-                background: isOnline ? '#C8FF00' : '#FF2222',
-                boxShadow: isOnline ? '0 0 6px rgba(200,255,0,0.3)' : 'none'
-              }} />
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: isOnline ? '#555' : '#FF2222' }}>
-                {isOnline ? 'ONLINE' : 'OFFLINE'}
-              </span>
-            </div>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-3)' }}>Today</span>
           </div>
         </div>
 
-        {/* Metrics Bar */}
+        {/* "Overview" heading */}
+        <div style={{ padding: '16px 20px 4px', flexShrink: 0 }}>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: 600, color: 'var(--text-1)' }}>Overview</h1>
+        </div>
+
+        {/* Metrics */}
         <MetricCards totalScanned={totalScanned} totalThreats={totalThreats} blockRate={blockRate} avgLatency={avgLatency} />
 
-        {/* Main Grid */}
-        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 300px', gap: '10px', padding: '0 12px 12px 12px', overflow: 'hidden' }}>
-
-          {/* Left */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', overflow: 'auto', position: 'relative' }}>
-            <GlobeBackground />
-
+        {/* Content grid */}
+        <div style={{ flex: 1, display: 'flex', gap: '12px', padding: '0 12px 12px', overflow: 'hidden', minHeight: 0 }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', overflow: 'auto', minWidth: 0 }}>
             {/* Scan card */}
             <div style={{
-              background: 'rgba(255,255,255,0.015)', border: '1px solid rgba(255,255,255,0.04)',
-              borderRadius: '10px', padding: '16px', position: 'relative', zIndex: 1
+              background: 'var(--bg-card)', border: '1px solid var(--border-card)',
+              borderRadius: '10px', padding: '16px'
             }}>
               <DemoPayloadButtons demoMode={demoMode} onSelectPayload={handleSelectPayload} />
               <ScanInput inputText={inputText} setInputText={setInputText} onSubmit={handleScan} loading={loading} loadingStage={loadingStage} error={error} />
               <LayerAnimation stage={loadingStage} verdict={result?.verdict} />
             </div>
-
             <ResultCard result={result} />
-            <ForensicReport result={result} />
-
-            {/* Attack feed */}
+            <ForensicReport report={result} triggered={result?.layer2_triggered} />
             <div style={{
-              background: 'rgba(255,255,255,0.015)', border: '1px solid rgba(255,255,255,0.04)',
-              borderRadius: '10px', minHeight: '140px', overflow: 'hidden'
+              background: 'var(--bg-card)', border: '1px solid var(--border-card)',
+              borderRadius: '10px', minHeight: '160px', overflow: 'hidden'
             }}>
               <AttackFeed log={log} />
             </div>
           </div>
-
-          {/* Right — Reports */}
-          <div style={{
-            background: 'rgba(255,255,255,0.015)', border: '1px solid rgba(255,255,255,0.04)',
-            borderRadius: '10px', overflow: 'hidden', display: 'flex', flexDirection: 'column'
-          }}>
-            <PreviousReports reports={reports} loading={reportsLoading} />
-          </div>
         </div>
       </div>
+
+      {/* RIGHT SIDEBAR — Notifications + Reports */}
+      <div style={{
+        width: '280px', background: 'var(--bg-sidebar)',
+        borderLeft: '1px solid var(--border)',
+        display: 'flex', flexDirection: 'column', flexShrink: 0, overflow: 'hidden'
+      }}>
+        <PreviousReports reports={reports} loading={reportsLoading} />
+      </div>
+
     </div>
     </motion.div>
   );

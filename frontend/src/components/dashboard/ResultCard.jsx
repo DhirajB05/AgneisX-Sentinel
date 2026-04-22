@@ -1,53 +1,56 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export default function ResultCard({ result }) {
   if (!result) return null;
-  const t = result.verdict === 'THREAT';
+
+  const isThreat = result.verdict === 'THREAT';
 
   return (
-    <AnimatePresence>
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-        style={{
-          background: 'rgba(255,255,255,0.015)',
-          border: `1px solid ${t ? 'rgba(255,34,34,0.15)' : 'rgba(200,255,0,0.12)'}`,
-          borderRadius: '10px', padding: '16px',
-          boxShadow: t ? '0 0 30px rgba(255,34,34,0.04)' : '0 0 30px rgba(200,255,0,0.04)',
-          position: 'relative', zIndex: 1
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+      style={{
+        background: 'var(--bg-card)', border: '1px solid var(--border-card)',
+        borderRadius: '10px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px'
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-3)' }}>// VERDICT</div>
+        <div style={{
+          fontFamily: 'var(--font-heading)', fontSize: '14px', fontWeight: 700,
+          color: isThreat ? 'var(--threat)' : 'var(--accent)',
+          padding: '4px 10px', background: isThreat ? 'rgba(239, 68, 68, 0.1)' : 'var(--accent-dim)',
+          borderRadius: '4px', letterSpacing: '0.05em'
         }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
-          <motion.div initial={{ scale: 0.8 }} animate={{ scale: [0.8, 1.05, 1] }}
-            style={{
-              background: t ? '#FF2222' : '#C8FF00', color: t ? '#fff' : '#000',
-              fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700,
-              padding: '5px 14px', borderRadius: '4px', letterSpacing: '0.1em',
-              boxShadow: t ? '0 0 16px rgba(255,34,34,0.25)' : '0 0 16px rgba(200,255,0,0.25)'
-            }}>
-            {t ? '⚠ THREAT DETECTED' : '✓ INPUT SAFE'}
-          </motion.div>
-          <div style={{
-            fontFamily: 'var(--font-mono)', fontSize: '9px',
-            color: t ? '#FF2222' : '#C8FF00',
-            background: t ? 'rgba(255,34,34,0.06)' : 'rgba(200,255,0,0.06)',
-            padding: '3px 8px', borderRadius: '3px'
-          }}>
-            SCORE: {result.injection_score?.toFixed(4)}
+          {isThreat ? 'THREAT DETECTED' : 'SAFE'}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '20px' }}>
+        <div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--text-3)', marginBottom: '4px' }}>CONFIDENCE</div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--text-1)' }}>{(result.injection_score * 100).toFixed(1)}%</div>
+        </div>
+        <div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--text-3)', marginBottom: '4px' }}>LATENCY</div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--text-1)' }}>
+            {result.layer2_triggered ? 'L2 (+450ms)' : 'L1 (<50ms)'}
           </div>
         </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-          {[
-            { label: 'VERDICT', value: result.verdict, color: t ? '#FF2222' : '#C8FF00' },
-            { label: 'LAYER 2', value: result.layer2_triggered ? 'TRIGGERED' : 'NOT TRIGGERED', color: result.layer2_triggered ? '#FF8800' : '#444' },
-            { label: 'SEVERITY', value: result.severity || 'N/A', color: '#888' }
-          ].map((f, i) => (
-            <div key={i} style={{ background: 'rgba(255,255,255,0.01)', borderRadius: '6px', padding: '10px 12px' }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: '#333', letterSpacing: '0.12em', marginBottom: '3px' }}>{f.label}</div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: f.color, fontWeight: 600 }}>{f.value}</div>
-            </div>
-          ))}
+      </div>
+      
+      {result.why && (
+        <div style={{ marginTop: '4px', borderTop: '1px solid var(--border-card)', paddingTop: '12px' }}>
+           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-2)', marginBottom: '4px' }}>[!] EXPLANATION</div>
+           <div style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--text-1)', lineHeight: 1.5 }}>{result.why}</div>
         </div>
-      </motion.div>
-    </AnimatePresence>
+      )}
+      
+      {result.technique && (
+        <div style={{ marginTop: '4px' }}>
+           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-2)', marginBottom: '4px' }}>[!] TECHNIQUE</div>
+           <div style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--text-1)', lineHeight: 1.5 }}>{result.technique}</div>
+        </div>
+      )}
+    </motion.div>
   );
 }
