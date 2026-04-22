@@ -24,10 +24,15 @@ HF_HEADERS = {"Authorization": f"Bearer {os.getenv('HF_TOKEN')}"}
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 gemini_model = genai.GenerativeModel("gemini-1.5-flash")
 
-supabase = create_client(
-    os.getenv("SUPABASE_URL"),
-    os.getenv("SUPABASE_KEY"),
-)
+def get_supabase():
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_KEY")
+    if not url or not key:
+        return None
+    try:
+        return create_client(url, key)
+    except Exception:
+        return None
 
 # ── Pre-seeded counters ───────────────────────────────────────────────────────
 total_scanned = 247
@@ -107,7 +112,10 @@ def _save_to_supabase(result: dict) -> None:
     """
     try:
         cr = result.get("claude_report") or {}
-        supabase.table("reports").insert({
+        client = get_supabase()
+        if not client:
+            return
+        client.table("reports").insert({
             "verdict":           result["verdict"],
             "injection_score":   result["injection_score"],
             "layer1_latency_ms": result["layer1_latency_ms"],

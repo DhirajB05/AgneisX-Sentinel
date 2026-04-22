@@ -6,14 +6,25 @@ from dotenv import load_dotenv
 load_dotenv()
 
 router = APIRouter()
-supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+def get_supabase():
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_KEY")
+    if not url or not key:
+        return None
+    try:
+        return create_client(url, key)
+    except Exception:
+        return None
 
 
 @router.get("/reports")
 def get_reports():
     try:
+        client = get_supabase()
+        if not client:
+            return {"reports": [], "total": 0}
         result = (
-            supabase.table("reports")
+            client.table("reports")
             .select(
                 "id, created_at, verdict, injection_score, "
                 "attack_type, severity, input_preview, layer2_triggered"
