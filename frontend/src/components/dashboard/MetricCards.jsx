@@ -58,7 +58,7 @@ export default function MetricCards({ totalScanned, totalThreats, blockRate, avg
     { label: "INPUTS SCANNED", value: totalScanned, color: "#F0F0F0", animateBg: false },
     { label: "THREATS BLOCKED", value: totalThreats, color: "#FF2222", animateBg: true },
     { label: "BLOCK RATE", value: blockRate, color: "#C8FF00", animateBg: false },
-    { label: "AVG L1 LATENCY", value: `${avgLatency}ms`, color: "#888888", animateBg: false }
+    { label: "AVG L1 LATENCY", value: avgLatency > 0 ? `${avgLatency}ms` : "<50ms", color: "#888888", animateBg: false }
   ];
 
   return (

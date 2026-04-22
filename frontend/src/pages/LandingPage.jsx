@@ -11,6 +11,12 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
     <div style={{ background: 'var(--bg-primary)', minHeight: '100vh', overflowX: 'hidden' }}>
       <NavbarLanding />
 
@@ -193,5 +199,6 @@ export default function LandingPage() {
         </div>
       </section>
     </div>
+    </motion.div>
   );
 }

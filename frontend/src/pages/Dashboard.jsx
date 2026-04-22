@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import NavbarDashboard from '../components/dashboard/NavbarDashboard';
 import DemoBanner from '../components/dashboard/DemoBanner';
 import MetricCards from '../components/dashboard/MetricCards';
@@ -33,6 +34,12 @@ export default function Dashboard() {
   };
 
   return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
     <div className="dashboard-layout">
       <style>
         {`
@@ -98,5 +105,6 @@ export default function Dashboard() {
       </div>
 
     </div>
+    </motion.div>
   );
 }
