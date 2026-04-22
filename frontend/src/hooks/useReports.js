@@ -1,18 +1,29 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_KEY
-);
+let supabase = null;
+const getSupabase = () => {
+  if (!supabase) {
+    const url = import.meta.env.VITE_SUPABASE_URL;
+    const key = import.meta.env.VITE_SUPABASE_KEY;
+    if (!url || !key) return null;
+    supabase = createClient(url, key);
+  }
+  return supabase;
+};
 
 export function useReports() {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchReports = async () => {
+    const client = getSupabase();
+    if (!client) {
+      setLoading(false);
+      return;
+    }
     try {
-      const { data, error } = await supabase
+      const { data, error } = await client
         .from("reports")
         .select(
           "id, created_at, verdict, injection_score, attack_type, severity, input_preview"
