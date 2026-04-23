@@ -65,6 +65,8 @@ Layer 2 (Deep Analysis)
   - Identify malicious intent
   - Generate sanitized output
   - Provide explanation
+    
+<img width="1280" height="698" alt="4e8f481a-e51a-4178-8634-f2f04424f60e" src="https://github.com/user-attachments/assets/5e9a8237-7076-4047-9396-5341f8797d85" />
 
 ---
 
