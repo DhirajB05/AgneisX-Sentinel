@@ -36,3 +36,26 @@ body {
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+/* Custom Component Styles */
+.anim-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; overflow: hidden; border-radius: 16px; padding: 12px 20px; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; transition: all 0.2s ease-out; outline: none; cursor: pointer; }
+.anim-btn:disabled { cursor: not-allowed; opacity: 0.5; }
+.anim-btn:active:not(:disabled) { transform: scale(0.98); }
+.anim-btn:focus-visible { box-shadow: 0 0 0 2px #080808, 0 0 0 4px rgba(200, 255, 0, 0.7); }
+.anim-btn.primary { background: #C8FF00; color: #000; border: 1px solid transparent; }
+.anim-btn.primary:hover:not(:disabled) { background: #d4ff1a; }
+.anim-btn.secondary { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
+.anim-btn.secondary:hover:not(:disabled) { border-color: rgba(200, 255, 0, 0.6); background: rgba(255, 255, 255, 0.1); }
+.anim-btn.danger { background: rgba(255, 34, 34, 0.1); color: #FFdddd; border: 1px solid rgba(255, 34, 34, 0.4); }
+.anim-btn.danger:hover:not(:disabled) { background: rgba(255, 34, 34, 0.15); }
+.anim-btn-glow { pointer-events: none; position: absolute; inset: 0; border-radius: 16px; opacity: 0; transition: opacity 0.2s; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); }
+.anim-btn:hover .anim-btn-glow { opacity: 1; }
+.anim-btn-ripple { pointer-events: none; position: absolute; transform: translate(-50%, -50%); border-radius: 50%; background: rgba(255,255,255,0.2); animation: btn-ripple 0.5s ease-out forwards; }
+@keyframes btn-ripple { 0% { width: 0; height: 0; opacity: 1; } 100% { width: 150px; height: 150px; opacity: 0; } }
+
+.scan-card { position: relative; z-index: 10; margin: 0 auto; width: 100%; border-radius: 28px; border: 1px solid rgba(255,255,255,0.1); background: radial-gradient(120% 120% at 30% 10%, #1a1a1a 0%, #0f0f10 60%, #0b0b0c 100%); color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 24px 32px; }
+.scan-bg-glow { pointer-events: none; position: absolute; left: 0; right: 0; bottom: -40px; top: 72%; border-radius: 28px; background: rgba(200, 255, 0, 0.15); filter: blur(24px); box-shadow: 0 40px 80px -16px rgba(200, 255, 0, 0.28); z-index: 0; }
+.scan-textarea { min-height: 140px; width: 100%; resize: none; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); padding: 16px; font-size: 14px; color: white; outline: none; transition: all 0.2s; font-family: var(--font-mono); }
+.scan-textarea::placeholder { color: #52525b; }
+.scan-textarea:focus { border-color: rgba(200, 255, 0, 0.8); }
+.scan-textarea.error { border-color: rgba(239, 68, 68, 0.8); }

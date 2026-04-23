@@ -13,6 +13,7 @@ import { useAttackLog } from '../hooks/useAttackLog';
 import { useReports } from '../hooks/useReports';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import GlitchBackground from '../components/dashboard/GlitchBackground';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -53,11 +54,22 @@ export default function Dashboard() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-    <div style={{ display: 'flex', height: '100vh', background: 'var(--bg-dash)', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', height: '100vh', background: 'transparent', overflow: 'hidden', position: 'relative' }}>
+      
+      {/* GLITCH BACKGROUND */}
+      <GlitchBackground 
+        glitchColors={["#22C55E", "#C8FF00", "#166534"]} 
+        glitchSpeed={80} 
+        density={0.08}
+        smooth={true}
+        centerVignette={true}
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, opacity: 0.4 }} 
+      />
 
       {/* LEFT SIDEBAR — matches reference: wider with text labels */}
       <div style={{
-        width: '200px', background: 'var(--bg-sidebar)',
+        position: 'relative', zIndex: 1,
+        width: '200px', background: 'rgba(4, 8, 4, 0.85)', backdropFilter: 'blur(10px)',
         borderRight: '1px solid var(--border)',
         display: 'flex', flexDirection: 'column', flexShrink: 0, padding: '0'
       }}>
@@ -125,7 +137,7 @@ export default function Dashboard() {
       </div>
 
       {/* MAIN AREA */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+      <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0, background: 'rgba(6, 10, 6, 0.4)' }}>
 
         {/* Top bar — breadcrumbs + controls */}
         <div style={{
@@ -195,7 +207,8 @@ export default function Dashboard() {
 
       {/* RIGHT SIDEBAR — Notifications + Reports */}
       <div style={{
-        width: '280px', background: 'var(--bg-sidebar)',
+        position: 'relative', zIndex: 1,
+        width: '280px', background: 'rgba(4, 8, 4, 0.85)', backdropFilter: 'blur(10px)',
         borderLeft: '1px solid var(--border)',
         display: 'flex', flexDirection: 'column', flexShrink: 0, overflow: 'hidden'
       }}>
