@@ -215,18 +215,6 @@ AI security is becoming critical infrastructure.
 - SOC and security tool integrations
 
 ---
-
-## License
-
-MIT License
-
----
-
-## Author
-
-Dhiraj B  
-https://github.com/DhirajB05  
-
 ---
 
 ## Final Note
